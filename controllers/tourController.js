@@ -1,22 +1,32 @@
 const fs = require('fs');
+const Tour = require('../model/tour');
 const tours =JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`, 'utf-8'))
 
 const checkTourId = (req, res, next, value) =>{
     
 }
 
-const getAllTours = (req, res)=>{
-        res.status(200).json({
-            status:'sucess',
-            result:tours.length,
-            data:{tours}
+const getAllTours = async (req, res)=>{
+    try {
+        const tours= await Tour.find();
+            res.status(200).json({
+                status:'sucess',
+                result:tours.length,
+                data:{tours}
+            })
+    } catch (error) {
+        res.status(404).json({
+            status:'fail',
+            data:{error}
         })
+    }
+  
  }
 
  const postTour = (req, res)=>{
-    const tourId = tours[tours.length-1]._id + 1;
-    console.log(tourId)
-    const new_tour = Object.assign({_id:tourId}, req.body)
+    const new_tour = new Tour(req.body)
+    testTour.save().then(data=>console.log(data)).catch(err=>console.log(`error: ${err}`))
+
     tours.push(new_tour);
     fs.writeFile(`${__dirname}/data/tours.json`, JSON.stringify(tours), err=>{
         res.status(201).json({
