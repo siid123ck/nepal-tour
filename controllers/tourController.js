@@ -7,13 +7,29 @@ const checkTourId = (req, res, next, value) =>{
 
 const getAllTours = async (req, res)=>{
     try {
-        const tours= await Tour.find();
+        const queryObj = {...req.query};
+        const excludeFields = ['page', 'sort', 'limit', 'fields'];
+        excludeFields.forEach(el=>delete queryObj[el]);
+
+        // advanced filtering 
+        let queryString = JSON.stringify(queryObj);
+        console.log('query string ', JSON.parse(queryString), queryString)
+        queryString = queryString.replace(/\b(gte|gt|lte|lt|eq|ni)\b/g, match=>`$${match}`)
+        console.log('query string ', JSON.parse(queryString))
+        let query=  Tour.find(JSON.parse(queryString))
+        
+        if(req.query.sort){
+            query = query.sort(req.query.sort)
+        }
+
+        const tours = await query;    
             res.status(200).json({
                 status:'sucess',
                 result:tours.length,
                 data:{tours}
             })
     } catch (error) {
+        console.log(error)
         res.status(404).json({
             status:'fail',
             data:{error}
@@ -33,6 +49,7 @@ const getAllTours = async (req, res)=>{
             data:{new_tour}
         })
     } catch (error) {
+        console.log(error)
         res.status(404).json({
             status:'fail',
             data:{error}
@@ -48,6 +65,7 @@ try {
       data:{tour}
   })
 } catch (err) {
+    console.log(error)
     res.status(404).json({
         status:'fail',
         data:{err}

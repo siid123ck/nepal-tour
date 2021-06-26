@@ -18,4 +18,12 @@ app.use('/api/tours', tourRouter)
 
 app.use('/api/users', userRouter)
 
+app.use((req, res, next)=>{
+    res.status(401)
+    .json({
+        status:'fail',
+        data:'page not found'
+    })
+})
+
 module.exports= app;

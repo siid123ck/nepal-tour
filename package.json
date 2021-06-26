@@ -4,7 +4,8 @@
   "description": "nepal tour project",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server"
+    "start": "nodemon server",
+    "debug":"ndb server.js"
   },
   "author": "siid sharma",
   "license": "ISC",

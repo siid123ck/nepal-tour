@@ -7,11 +7,12 @@ const tourSchema = new mongoose.Schema({
         unique:true,
         trim: true
     },
+    rating:Number,
     ratingAverage: Number,
     ratingQty:Number,
     discount:Number,
     price:{
-        type:String, 
+        type:Number, 
         required:[true, 'tour must have price']
     },
     summary:{
@@ -23,6 +24,8 @@ const tourSchema = new mongoose.Schema({
         type:String, 
         trim:true
     },
+    difficulty: String,
+    duration: String,
     imageCover:{
         type:String, 
         required:[true, 'tour must have imageCover'],

@@ -1,14 +1,10 @@
-const fs = require("fs");
 
-// Asynchronous writing
-fs.appendFile('appendAsync.txt', 'append asynchronous text', function (err) {
-   if (err) {
-      return console.error(err);
-   }
-   console.log("Asynchronous append success ");
-});
+let data = [
+   {name:"siid", age:21},
+   {name:"susil", age:23},
+   {name:"santosh", age:20},
+   {name:"manoj", age:20},
+   {name:"najir", age:14}
+]
 
-// Synchronous writing
-fs.writeFileSync('appendSync.txt', 'append synchronous text');
-console.log("Synchronous append");
-
+console.log(data.sort(4))
