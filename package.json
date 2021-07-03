@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server",
-    "debug":"ndb server.js"
+    "debug": "ndb server.js"
   },
   "author": "siid sharma",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "express": "^4.17.1",
     "mongoose": "^5.12.8",
     "nodemon": "^2.0.7",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "validator": "^13.6.0"
   }
 }

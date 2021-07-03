@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const dotenv = require('dotenv');
 dotenv.config({path:'./config.env'});
 
-const DB = process.env.DATABASE.replace('<password>', 'SuWlCoeyb7MzT0Og');
-mongoose.connect(DB, {
+// const DB = process.env.DATABASE.replace('<password>', 'SuWlCoeyb7MzT0Og');
+mongoose.connect(process.env.DATABASE_LOCAL, {
     useNewUrlParser:true, 
     useCreateIndex:true, 
     useFindAndModify:false,

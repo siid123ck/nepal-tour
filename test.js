@@ -1,10 +1,16 @@
-
-let data = [
-   {name:"siid", age:21},
-   {name:"susil", age:23},
-   {name:"santosh", age:20},
-   {name:"manoj", age:20},
-   {name:"najir", age:14}
+const data = [
+    {name:'siid', age:21, address:'sydney', legend:true},
+    {name:'bisal', age:16, address:'Kathmandu', legend:true},
+    {name:'Daate', age:22, address:'Chitwan', legend:false},
+    {name:'susil', age:24, address:'Sasural', legend:true},
+    {name:'Pini', age:21, address:'Malangwa', legend:false},
+    {name:'Sameer', age:21, address:'Lalbandi', legend:false}
 ]
-
-console.log(data.sort(4))
+const myfunc = async ()=>{
+    data.select()
+    const result= await data;
+    console.log('result', result)
+   
+}
+let value = 'dskdf,dfifdi'
+console.log(value.split(',').join(' '))

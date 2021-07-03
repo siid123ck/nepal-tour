@@ -8,10 +8,10 @@ app.use(express.json())
 
 app.use(express.static(`${__dirname}/public`))
 
-app.use('/api/users', (req, res, next)=>{
-    console.log('hi, this is midddleware from express js');
-    next();
-})
+// app.use('/api/users', (req, res, next)=>{
+//     console.log('hi, this is midddleware from express js');
+//     next();
+// })
 
 
 app.use('/api/tours', tourRouter)
