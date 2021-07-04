@@ -5,12 +5,29 @@ const checkTourId = (req, res, next, value) =>{
     
 }
 
+// const aliasTopTours =  (req, res, next)=>{
+// console.log('middleware used');
+// next()
+// }
+
+class APIFeature {
+    constructor(query, queryString){
+        this.query = query;
+        this.queryString=queryString;
+    }
+
+    filter(){
+        
+    }
+}
+
+
 const getAllTours = async (req, res)=>{
     try {
+        //  filtering operation
         const queryObj = {...req.query};
         const excludeFields = ['page', 'sort', 'limit', 'fields'];
         excludeFields.forEach(el=>delete queryObj[el]);
-        // advanced filtering operation
         let queryString = JSON.stringify(queryObj);
         queryString = queryString.replace(/\b(gte|gt|lte|lt|eq|ni)\b/g, match=>`$${match}`)
         let query=  Tour.find(JSON.parse(queryString))
@@ -32,13 +49,26 @@ const getAllTours = async (req, res)=>{
             
             query = query.limit(parseInt(req.query.limit))
         }
+
+        //pagination 
+        const page= req.query.page*1 || 1;
+        const limit = req.query.limit*1 || 10;
+        const skip = (page-1) * limit;
+        query = query.skip(skip).limit(limit);
+
+        if(req.query.page){
+            const documentsNum =await Tour.countDocuments();
+            if(documentsNum <=skip) throw new Error('this page is not available')
+        }
+
+        //execute query
         const tours = await query;    
             res.status(200).json({
                 status:'sucess',
                 result:tours.length,
                 data:{tours}
             })
-    } catch (error) {
+        } catch (error) {
         console.log(error)
         res.status(404).json({
             status:'fail',
@@ -123,4 +153,4 @@ const deleteTour = async (req, res)=>{
 }
 
 
- module.exports= {getAllTours, postTour, getSingleTour, updateTour, deleteTour};
+ module.exports= {getAllTours, postTour, getSingleTour, updateTour, deleteTour, aliasTopTours};
