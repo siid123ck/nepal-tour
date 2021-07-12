@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAllTours, postTour, getSingleTour, updateTour, deleteTour, aliasTopTours } = require('../controllers/tourController');
+const { getAllTours, postTour, getSingleTour, updateTour, deleteTour} = require('../controllers/tourController');
 
 
 //get top tours
-router.route('/api/tours/top-tours').get(aliasTopTours, getAllTours)
+// router.route('/api/tours/top-tours').get(aliasTopTours, getAllTours)
 
 
 router.route('/').get(getAllTours)
