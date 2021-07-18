@@ -6,20 +6,35 @@ const tourSchema = new mongoose.Schema({
         type:String, 
         required:[true, 'tour must have name'], 
         unique:true,
-        trim: true
+        trim: true,
+        minlength:[3, 'the tour name must have at least 3 characters'],
+        maxlength:[30, 'the tour name must have maximum 30 characters']
     },
     secretTour:{
         type:Boolean,
         default:false
     },
     slug:String,
-    rating:Number,
+    rating:{
+        type:Number,
+        min:[1, 'rating number must be at least 1'],
+        max:[5, 'rating number must not be more than 5'],
+    },
     ratingAverage: Number,
     ratingQty:Number,
-    discount:Number,
     price:{
         type:Number, 
         required:[true, 'tour must have price']
+    },
+    discount:{
+        type:Number,
+        validate:{
+            // this points to current doc so it only work on creating new document not on updating document
+            validator:function(val){
+                return val < this.price;
+            },
+            message:'the discount value ({VALUE}) must be less than tour price'
+        }
     },
     summary:{
         type:String, 
@@ -30,7 +45,13 @@ const tourSchema = new mongoose.Schema({
         type:String, 
         trim:true
     },
-    difficulty: String,
+    difficulty: {
+        type:String, 
+        enum:{
+            values:['easy', 'medium', 'hard'],
+            message:'tour difficulty can be either easy, medium or hard'
+        }
+    },
     duration: String,
     imageCover:{
         type:String, 
