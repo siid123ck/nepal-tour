@@ -38,6 +38,13 @@ const tourSchema = new mongoose.Schema({
         select:false
     },
     startDate:[Date]
+}, {
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+})
+
+tourSchema.virtual('nepaliPrice').get(function (){
+    return this.price * 100;
 })
 const Tour = mongoose.model('Tour', tourSchema);
 
