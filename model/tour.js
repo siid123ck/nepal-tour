@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema({
     name:{
@@ -7,6 +8,11 @@ const tourSchema = new mongoose.Schema({
         unique:true,
         trim: true
     },
+    secretTour:{
+        type:Boolean,
+        default:false
+    },
+    slug:String,
     rating:Number,
     ratingAverage: Number,
     ratingQty:Number,
@@ -46,6 +52,34 @@ const tourSchema = new mongoose.Schema({
 tourSchema.virtual('nepaliPrice').get(function (){
     return this.price * 100;
 })
+
+//document middleware
+tourSchema.pre('save', function (next){
+    this.slug = slugify(this.name, {lower:true})
+     next();
+})
+
+tourSchema.post('save', function (doc, next){
+    console.log(doc)
+     next();
+})
+
+// query middleware
+tourSchema.pre(/^find/, function(next){
+    this.find({secretTour:{$ne:true}})
+    this.start=Date.now()
+    next();
+})
+// tourSchema.pre('findOne', function(next){
+//     this.find({secretTour:{$ne:true}})
+//     next();
+// })
+
+tourSchema.post(/^find/, function(doc, next){
+    console.log(`this query took ${Date.now() - this.start} miliseconds`)
+    next();
+})
+
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
