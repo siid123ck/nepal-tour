@@ -24,7 +24,7 @@ const getAllTours = async (req, res)=>{
         } catch (error) {
         console.log(error)
         res.status(404).json({
-            status:'fail',
+            status:'fail', 
             data:{error}
         })
     }

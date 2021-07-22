@@ -34,7 +34,7 @@ const tourSchema = new mongoose.Schema({
                 return val < this.price;
             },
             message:'the discount value ({VALUE}) must be less than tour price'
-        }
+        } 
     },
     summary:{
         type:String, 

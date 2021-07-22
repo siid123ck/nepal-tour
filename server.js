@@ -12,10 +12,7 @@ mongoose.connect(process.env.DATABASE_LOCAL, {
 }).then((con)=>{
     // console.log('connection', con.connection);
     console.log('database connected')
-})
-
-
-
+})  
 
 const PORT = process.env.PORT ||8000;
 const NODE_ENV = process.env.NODE_ENV;

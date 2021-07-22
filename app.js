@@ -18,11 +18,36 @@ app.use('/api/tours', tourRouter)
 
 app.use('/api/users', userRouter)
 
-app.use((req, res, next)=>{
-    res.status(401)
-    .json({
-        status:'fail',
-        data:'page not found'
+//handling unhadled routes
+
+app.all('*', (req, res, next)=>{
+    // res.status(404).json({
+    //     status:'fail',
+    //     data:`page with ${req.originalUrl} not found on this page` 
+    // })
+    const err = new Error(`page with ${req.originalUrl} not found on this page`);
+    err.statusCode = 404; 
+    err.status = 'fail';
+    console.log('console before middleware')
+    next(err)
+    console.log('console after middleware')
+})
+
+// app.use((req, res, next)=>{
+//     res.status(401)
+//     .json({
+//         status:'fail',
+//         data:`page with ${req.originalUrl} not found on this page`
+//     })
+// })
+
+app.use((err, req, res, next)=>{
+    err.statusCode = err.statusCode||501;
+    err.status = err.status||'error';
+
+    res.status(err.statusCode).json({
+        status:err.status,
+        message:err.message
     })
 })
 
