@@ -1,10 +1,11 @@
-const fs = require('fs');
+// const fs = require('fs');
 const Tour = require('../model/tour');
-const APIFeature = require('../utils/apiFeatures')
+const APIFeature = require('../utils/apiFeatures');
+const AppError = require('../utils/AppError');
 
-const checkTourId = (req, res, next, value) =>{
+// const checkTourId = (req, res, next, value) =>{
     
-}
+// }
 
 // const aliasTopTours =  (req, res, next)=>{
 // console.log('middleware used');
@@ -91,7 +92,6 @@ const updateTour = async (req, res)=>{
 const deleteTour = async (req, res)=>{
     try {
         const tour = await Tour.findByIdAndDelete(req.params.id)
-        console.log('tour' + tour)
         res.status(200).json({
             status:'success',
             data:{tour}
