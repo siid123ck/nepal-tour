@@ -1,6 +1,8 @@
 const express = require('express');
 const tourRouter = require('./routes/tour');
 const userRouter = require('./routes/user');
+const AppError = require('./utils/AppError');
+const errorHandler = require('./ErrorHandler/errorHandler')
 
 const app = express();
 
@@ -25,12 +27,12 @@ app.all('*', (req, res, next)=>{
     //     status:'fail',
     //     data:`page with ${req.originalUrl} not found on this page` 
     // })
-    const err = new Error(`page with ${req.originalUrl} not found on this page`);
-    err.statusCode = 404; 
-    err.status = 'fail';
-    console.log('console before middleware')
-    next(err)
-    console.log('console after middleware')
+
+    // const err = new Error(`page with ${req.originalUrl} not found on this page`);
+    // err.statusCode = 404; 
+    // err.status = 'fail';
+
+    next(new AppError(`page with ${req.originalUrl} not found on this page, pleaze check url`))
 })
 
 // app.use((req, res, next)=>{
@@ -41,14 +43,6 @@ app.all('*', (req, res, next)=>{
 //     })
 // })
 
-app.use((err, req, res, next)=>{
-    err.statusCode = err.statusCode||501;
-    err.status = err.status||'error';
-
-    res.status(err.statusCode).json({
-        status:err.status,
-        message:err.message
-    })
-})
+app.use(errorHandler)
 
 module.exports= app;
