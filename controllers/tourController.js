@@ -35,6 +35,8 @@ const getAllTours = catchAsync(async (req, res, next)=>{
 
 const getSingleTour = catchAsync(async (req, res, next)=>{
   const tour = await Tour.findById(req.params.id);
+  if(!tour) return next(new AppError(`Tour not found with id ${req.params.id}`, 404));
+
   res.status(200).json({
       status:'success',
       data:{tour}
@@ -46,6 +48,9 @@ const updateTour = catchAsync(async (req, res, next)=>{
             new: true,
             runValidators: true
         })
+
+        if(!tour) return next(new AppError(`Tour not found with id ${req.params.id}`, 404));
+        
         res.status(200).json({
             status:'success',
             data:{tour}
@@ -54,6 +59,7 @@ const updateTour = catchAsync(async (req, res, next)=>{
 
 const deleteTour = catchAsync(async (req, res, next)=>{
         const tour = await Tour.findByIdAndDelete(req.params.id)
+        if(!tour) return next(new AppError(`Tour not found with id ${req.params.id}`, 404));
         res.status(200).json({
             status:'success',
             data:{tour}

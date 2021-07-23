@@ -1,5 +1,5 @@
-const parent = fun=> ()=>fun();
+const parent = {sirname:"sharma", name:"siid"}
 
-const child = x=> x+5;
+const child = {...parent};
 
-console.log(parent(child('s')))
+console.log(child.sirname)
