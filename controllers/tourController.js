@@ -2,18 +2,15 @@
 const Tour = require('../model/tour');
 const APIFeature = require('../utils/apiFeatures');
 const AppError = require('../utils/AppError');
+const catchAsync = require('../utils/catchAsync');
 
-// const checkTourId = (req, res, next, value) =>{
-    
-// }
+const hanldeCastErr = err=>{
+    const message = `Invalid ${err.path}: ${err.value}`; 
+    return new AppError(message, 400)
+}
 
-// const aliasTopTours =  (req, res, next)=>{
-// console.log('middleware used');
-// next()
-// }
 
-const getAllTours = async (req, res)=>{
-    try {
+const getAllTours = catchAsync(async (req, res, next)=>{
         const features = new APIFeature(Tour.find(), req.query).filter().sort().limit()
         .limitFields().paginate()
         const tours = await features.query; 
@@ -22,88 +19,46 @@ const getAllTours = async (req, res)=>{
                 result:tours.length,
                 data:{tours}
             })
-        } catch (error) {
-        console.log(error)
-        res.status(404).json({
-            status:'fail', 
-            data:{error}
-        })
-    }
   
- }
+ })
 
- const postTour = async (req, res)=>{
+
+ const postTour = catchAsync(async (req, res, next)=>{
     // const new_tour = new Tour(req.body);
     // new_tour.save();
+    const new_tour = await Tour.create(req.body);
+    res.status(201).json({
+        status:'sucess',
+        data:{new_tour}
+    })
+})
 
-    try {
-        const new_tour = await Tour.create(req.body);
-        res.status(201).json({
-            status:'sucess',
-            data:{new_tour}
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(404).json({
-            status:'fail',
-            data:{error}
-        })
-    }
-}
-
-const getSingleTour = async (req, res)=>{
-try {
+const getSingleTour = catchAsync(async (req, res, next)=>{
   const tour = await Tour.findById(req.params.id);
   res.status(200).json({
       status:'success',
       data:{tour}
   })
-} catch (err) {
-    console.log(error)
-    res.status(404).json({
-        status:'fail',
-        data:{err}
-    })
-}
-}
+})
 
-const updateTour = async (req, res)=>{
-    try {
+const updateTour = catchAsync(async (req, res, next)=>{
         const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         })
-        console.log('tour' + tour)
-        console.log(req.body)
         res.status(200).json({
             status:'success',
             data:{tour}
         })
+});
 
-    } catch (error) {
-        res.status(404).json({
-            status:'fail',
-            data:{error}
-        })
-    }
- 
-};
-
-const deleteTour = async (req, res)=>{
-    try {
+const deleteTour = catchAsync(async (req, res, next)=>{
         const tour = await Tour.findByIdAndDelete(req.params.id)
         res.status(200).json({
             status:'success',
             data:{tour}
         })
-
-    } catch (error) {
-        res.status(404).json({
-            status:'fail',
-            data:{error}
-        })
-    }
-}
+})
 
 
  module.exports= {getAllTours, postTour, getSingleTour, updateTour, deleteTour};

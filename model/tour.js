@@ -81,13 +81,12 @@ tourSchema.pre('save', function (next){
 })
 
 tourSchema.post('save', function (doc, next){
-    console.log(doc)
      next();
 })
 
 // query middleware
 tourSchema.pre(/^find/, function(next){
-    this.find({secretTour:{$ne:true}})
+    this.find({secretTour:false})
     this.start=Date.now()
     next();
 })
@@ -96,10 +95,10 @@ tourSchema.pre(/^find/, function(next){
 //     next();
 // })
 
-tourSchema.post(/^find/, function(doc, next){
-    console.log(`this query took ${Date.now() - this.start} miliseconds`)
-    next();
-})
+// tourSchema.post(/^find/, function(doc, next){
+//     console.log(`this query took ${Date.now() - this.start} miliseconds`)
+//     next();
+// })
 
 const Tour = mongoose.model('Tour', tourSchema);
 

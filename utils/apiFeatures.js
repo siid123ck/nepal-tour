@@ -26,7 +26,6 @@ class APIFeature {
 
     limit(){
         if(this.queryString.limit){
-            console.log('limit', this.queryString.limit)
             this.query = this.query.limit(parseInt(this.queryString.limit))
         }
         return this;
@@ -35,7 +34,6 @@ class APIFeature {
     limitFields(){
         if(this.queryString.fields){
             const fieldsLimited = this.queryString.fields.split(',').join(' ')
-            console.log(fieldsLimited)
             this.query = this.query.select(fieldsLimited)
         } 
         else this.query = this.query.select("-__v")
@@ -43,10 +41,12 @@ class APIFeature {
     }
 
     paginate(){
-        const page= this.queryString.page*1 || 1;
-        const limit = this.queryString.limit*1 || 10;
-        const skip = (page-1) * limit;
-        this.query = this.query.skip(skip).limit(limit);
+        if(this.queryString.page){
+            const page= this.queryString.page*1 || 1;
+            const limit = this.queryString.limit*1 || 10;
+            const skip = (page-1) * limit;
+            this.query = this.query.skip(skip).limit(limit);
+        }
         return this;
     }
 

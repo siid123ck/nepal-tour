@@ -1,4 +1,5 @@
-const dotenv = require('dotenv');
-dotenv.config({path:'./config.env'});
+const parent = fun=> ()=>fun();
 
-console.log(process.env.NODE_ENV)
+const child = x=> x+5;
+
+console.log(parent(child('s')))
