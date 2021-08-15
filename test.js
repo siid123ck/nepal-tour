@@ -1,5 +1,6 @@
 const parent = {sirname:"sharma", name:"siid"}
+const bcrypt = require('bcryptjs')
 
-const child = {...parent};
+const child = 'edjlkfdkl43';
 
-console.log(child.sirname)
+console.log(bcrypt.hashSync(child))

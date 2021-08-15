@@ -1,12 +1,14 @@
 const app = require('express');
-const { getAllUsers, postUser, getSingleUser, updateUser, deleteUser } = require('../controllers/userController');
+const authController = require('../controllers/authController')
+const { getAllUsers, getSingleUser, updateUser, deleteUser } = require('../controllers/userController');
 const router = app.Router();
 
-
+// router.post('/signup', authController.signup)
 
 router.route('/')
 .get(getAllUsers)
-.post(postUser);
+
+router.post('/signup', authController.signup)
 
 router.route('/:user')
 .get(getSingleUser)

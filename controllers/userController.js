@@ -1,16 +1,14 @@
-const users = [{'name':'siid', 'result':'pass'}];
+const User = require("../model/user");
 
-const getAllUsers = (req, res)=>{
+const getAllUsers = async(req, res)=>{
+  const users = await User.find()
         res.status(200).json({
             status:'sucess',
             result:users.length,
-            data:{users}
+            users
         })
  }
 
- const postUser = (req, res)=>{
-  res.send('posted')
-}
 
 const getSingleUser =  (req, res)=>{
   res.send('get single user')
@@ -25,4 +23,4 @@ const updateUser = (req, res)=>{
 }
 
 
- module.exports= {getAllUsers, postUser, getSingleUser, updateUser, deleteUser};
+ module.exports= {getAllUsers, getSingleUser, updateUser, deleteUser};
