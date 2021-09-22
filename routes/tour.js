@@ -8,10 +8,12 @@ const { getAllTours, postTour, getSingleTour, updateTour, deleteTour} = require(
 // router.route('/api/tours/top-tours').get(aliasTopTours, getAllTours)
 
 
-router.route('/').get(getAllTours)
+router.route('/')
+.get(getAllTours)
 .post(postTour);
 
-router.route('/:id').get(getSingleTour)
+router.route('/:id')
+.get(getSingleTour)
 .patch(updateTour)
 .delete(deleteTour);
 
