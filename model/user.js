@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
     password:{
         type:String,
         required:[true, "Password is required"],
-        minlength:8
+        minlength:8,
+        select:false
     },
     comfirm_password:{
         type:String,
@@ -37,13 +38,19 @@ const userSchema = mongoose.Schema({
 }) 
 
 userSchema.pre('save', async function(next){
-    // if password modified
+    // if password not modified
     if(!this.isModified('password')) return next();
 
-    //hash the password
+    //hash the password if modified
     this.password= await bcrypt.hash(this.password, 12)
 
     this.comfirm_password=undefined;
 })
+
+userSchema.methods.correctPassword =async function(userPassword, enteredPassword){
+    const matchedPassword = await bcrypt.compare(enteredPassword, userPassword)
+    console.log(matchedPassword) 
+    return matchedPassword;
+}
 
 module.exports=mongoose.model('User', userSchema);

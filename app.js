@@ -1,4 +1,5 @@
 const express = require('express');
+const authController = require('./controllers/authController')
 const tourRouter = require('./routes/tour');
 const userRouter = require('./routes/user');
 const AppError = require('./utils/AppError');
@@ -6,7 +7,7 @@ const errorHandler = require('./ErrorHandler/errorHandler')
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json()) 
 
 app.use(express.static(`${__dirname}/public`))
 
@@ -20,7 +21,10 @@ app.use('/api/tours', tourRouter)
 
 app.use('/api/users', userRouter)
 
-//handling unhadled routes
+app.post('/api/auth/signup', authController.signup)
+app.post('/api/auth/login', authController.login)
+
+//handling unhadled routes 
 
 app.all('*', (req, res, next)=>{
     // res.status(404).json({
