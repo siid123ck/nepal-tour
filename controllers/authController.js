@@ -43,3 +43,13 @@ exports.login = catchAsync(async (req, res, next)=>{
         token
     })
 })
+
+exports.protect = catchAsync(async (req, res, next)=>{
+    let token; 
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        token = req.headers.authorization.split(' ')[1];
+    }
+    if(!token) return next(new AppError('You are not authorized to access this page, sign up today', 401))
+    console.log(token)
+    next();
+})
