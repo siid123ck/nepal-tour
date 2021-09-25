@@ -11,6 +11,15 @@ const jsonToken = id=>jwt.sign({id}, process.env.JWT_SECRET, {
     expiresIn:process.env.JWT_SECRET_EXPIRE
 }) 
 
+const sendResponseToken = (user, statusCode, res) =>{
+    const token = jsonToken(user._id)
+    res.status(statusCode).json({
+        status:'success',
+        user,
+        token
+    })
+}
+
 exports.signup = catchAsync(async (req, res, next)=>{
     // const newUser = await User.create({
     //     name:req.body.name,
@@ -19,12 +28,13 @@ exports.signup = catchAsync(async (req, res, next)=>{
     //     comfirm_password:req.body.comfirm_password
     // }); 
     const newUser = await User.create(req.body)
-    const token = jsonToken(newUser._id)
-    res.status(201).json({
-        status:'success',
-        user:newUser,
-        token
-    })
+    // const token = jsonToken(newUser._id)
+    // res.status(201).json({
+    //     status:'success',
+    //     user:newUser,
+    //     token
+    // })
+    sendResponseToken(newUser, 201, res)
 })
 
 exports.login = catchAsync(async (req, res, next)=>{
@@ -40,11 +50,13 @@ exports.login = catchAsync(async (req, res, next)=>{
     if(!user || !await user.correctPassword(user.password, password)){
         return next(new AppError('Incorrect email or password', 401))  
     } 
-    const token = jsonToken(user._id)
-    res.json({
-        status:'success',
-        token
-    })
+    // const token = jsonToken(user._id)
+    // res.json({
+    //     status:'success',
+    //     token
+    // })
+    sendResponseToken(user, 201, res)
+
 })
 
 exports.protect = catchAsync(async (req, res, next)=>{
@@ -126,11 +138,28 @@ exports.resetPassword = catchAsync(async(req, res, next)=>{
     user.passwordResetToken = undefined;
     await user.save();
 
-    const token = jsonToken(user._id); 
-
-    res.status(202).json({
-        status:'success',
-        token
-    }) 
+    sendResponseToken(user, 201, res)
 })
 
+exports.updatePassword = catchAsync(async(req, res, next)=>{
+    //get the user from collection 
+    const {password, comfirm_password, currentPassword} = req.body;
+    const user = await User.findOne(req.user._id).select('+password');
+    if(!user) return next(new AppError('You are not logged in, please login with your gmail or sign up', 402))
+
+    if(!password) return next(new AppError('Please provide current password', 400))
+
+    //check if current password is matched with entered password
+    if(!await user.correctPassword(user.password, currentPassword)){
+        return next(new AppError('password you entered did not matched with current password, try again', 400))
+    }
+
+    user.password = password; 
+    user.comfirm_password = comfirm_password;
+    await user.save();
+
+    //generate token and send it
+    console.log(user)
+    console.log(req.user)
+    sendResponseToken(user, 201, res)
+})

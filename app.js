@@ -26,6 +26,7 @@ app.post('/api/auth/signup', authController.signup)
 app.post('/api/auth/login', authController.login)
 app.post('/api/auth/forgotpassword', authController.forgotPassword)
 app.patch('/api/auth/resetpassword/:token', authController.resetPassword)
+app.post('/api/auth/updatepassword', authController.protect, authController.updatePassword)
 
 
 
