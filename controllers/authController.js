@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 // const { decode } = require('punycode'); // idk why I used it here
 const {promisify} = require('util'); 
+const crypto = require('crypto');
 const sendEmail = require('../utils/email')
 const User = require('../model/user');
 const AppError = require('../utils/AppError');
@@ -107,6 +108,29 @@ try {
     await user.save({validateBeforeSave:false});
     return next(new AppError('There is error while sending email'))
 }
-
 }) 
+
+exports.resetPassword = catchAsync(async(req, res, next)=>{
+    const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex'); 
+    const user = await User.findOne({
+        passwordResetToken:hashedToken,
+        passwordResetExpire:{$gt: Date.now()}
+    })
+    console.log(user)
+
+    if(!user) return next(new AppError('token is expired or invalid', 400))
+    
+    user.password = req.body.password;
+    user.comfirm_password = req.body.comfirm_password;
+    user.passwordResetExpire = undefined;
+    user.passwordResetToken = undefined;
+    await user.save();
+
+    const token = jsonToken(user._id); 
+
+    res.status(202).json({
+        status:'success',
+        token
+    }) 
+})
 

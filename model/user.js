@@ -56,6 +56,13 @@ userSchema.pre('save', async function(next){
     this.comfirm_password=undefined;
 })
 
+userSchema.pre('save', function(next){
+    if(!this.isModified('password')) return next();
+    
+    this.passwordChangeAt = Date.now() - 1000;
+    next();
+})
+
 userSchema.methods.correctPassword =async function(userPassword, enteredPassword){
     const matchedPassword = await bcrypt.compare(enteredPassword, userPassword)
     return matchedPassword;
