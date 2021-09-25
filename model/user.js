@@ -76,7 +76,7 @@ userSchema.methods.createResetToken = function(){
     this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex'); 
     this.passwordResetExpire = Date.now() + 1000 * 60 *5;
  
-    console.log(resetToken, this.passwordResetToken, this.passwordResetExpire)
+    // console.log(resetToken, this.passwordResetToken, this.passwordResetExpire)
     return resetToken;
 }
 module.exports=mongoose.model('User', userSchema); 

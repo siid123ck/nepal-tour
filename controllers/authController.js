@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { decode } = require('punycode');
-const {promisify} = require('util')
+// const { decode } = require('punycode'); // idk why I used it here
+const {promisify} = require('util'); 
+const sendEmail = require('../utils/email')
 const User = require('../model/user');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
@@ -82,13 +83,30 @@ exports.forgotPassword = catchAsync(async (req, res, next)=>{
   if(!user) return next(new AppError('There is no email with this email', 404));
 
   const resetToken = user.createResetToken(); 
-  console.log(resetToken)
 //   await user.save({validateBeforeSave:false});
   await user.save({validateBeforeSave:false});
 
-  res.status(202).json({
-      status:'success',
-      resetToken
-  })
-})
+// send token to email
+const resetLink = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`
+// console.log(resetLink)
+const message = `forgot your password ? click on link ${resetLink} to reset the password`;
+try {
+    await sendEmail({
+        email:user.gmail,
+        subject:'reset token (valid for 5 minutes',
+        message
+    })
+      res.status(202).json({
+          status:'success',
+          resetToken
+      })  
+} catch (error) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpire = undefined;
+
+    await user.save({validateBeforeSave:false});
+    return next(new AppError('There is error while sending email'))
+}
+
+}) 
 
