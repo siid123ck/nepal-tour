@@ -24,6 +24,8 @@ app.use('/api/users', userRouter)
 
 app.post('/api/auth/signup', authController.signup)
 app.post('/api/auth/login', authController.login)
+app.post('/api/auth/forgotpassword', authController.forgotPassword)
+// app.post('/api/auth/resetpassword', authController.resetPassword)
 
 
 

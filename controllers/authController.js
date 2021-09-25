@@ -71,8 +71,24 @@ exports.protect = catchAsync(async (req, res, next)=>{
 }) 
 
 exports.restrictTo = (...roles) => (req, res, next)=>{
-    console.log(req.user.role)
     if(!roles.includes(req.user.role)) return next(new AppError('You dont have permission to this page', 403))
    
     next()
 }
+
+exports.forgotPassword = catchAsync(async (req, res, next)=>{
+  const user = await User.findOne({gmail:req.body.gmail}); 
+
+  if(!user) return next(new AppError('There is no email with this email', 404));
+
+  const resetToken = user.createResetToken(); 
+  console.log(resetToken)
+//   await user.save({validateBeforeSave:false});
+  await user.save({validateBeforeSave:false});
+
+  res.status(202).json({
+      status:'success',
+      resetToken
+  })
+})
+
