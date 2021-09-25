@@ -16,7 +16,7 @@ router.route('/')
 router.route('/:id')
 .get(getSingleTour)
 .patch(updateTour)
-.delete(deleteTour);
+.delete(authController.protect, authController.restrictTo('admin', 'guide-lead'), deleteTour);
 
 router.param('id', (req, res, next, value)=>{
     console.log(`tourId is ${value}`);

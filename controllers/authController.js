@@ -69,3 +69,10 @@ exports.protect = catchAsync(async (req, res, next)=>{
     req.user = newUser;
     next();
 }) 
+
+exports.restrictTo = (...roles) => (req, res, next)=>{
+    console.log(req.user.role)
+    if(!roles.includes(req.user.role)) return next(new AppError('You dont have permission to this page', 403))
+   
+    next()
+}
