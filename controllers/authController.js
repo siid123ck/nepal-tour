@@ -159,7 +159,5 @@ exports.updatePassword = catchAsync(async(req, res, next)=>{
     await user.save();
 
     //generate token and send it
-    console.log(user)
-    console.log(req.user)
     sendResponseToken(user, 201, res)
 })

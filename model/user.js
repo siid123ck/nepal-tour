@@ -37,6 +37,11 @@ const userSchema = mongoose.Schema({
     passwordChangeAt: Date,
     passwordResetToken:String, 
     passwordResetExpire:Date,
+    active:{
+        type:Boolean,
+        default:true,
+        select:false
+    },
     role:{
         type:String,
         enum:['user', 'guide', 'guide-lead', 'admin'],
@@ -56,6 +61,7 @@ userSchema.pre('save', async function(next){
     this.comfirm_password=undefined;
 })
 
+// only work on save and create document
 userSchema.pre('save', function(next){
     if(!this.isModified('password')) return next();
     
@@ -63,9 +69,13 @@ userSchema.pre('save', function(next){
     next();
 })
 
+userSchema.pre(/^find/, function(next){
+    this.find({active:{$ne:false}}); 
+    next();
+})
+
 userSchema.methods.correctPassword =async function(userPassword, enteredPassword){
     const matchedPassword = await bcrypt.compare(enteredPassword, userPassword)
-    console.log('df')
     return matchedPassword;
 }
 
