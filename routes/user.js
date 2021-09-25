@@ -4,11 +4,11 @@ const router = app.Router();
 
 // router.post('/signup', authController.signup)
 
-router.route('/')
-.get(getAllUsers)
+router.route('/') 
+.get(getAllUsers) 
 
 router.route('/:user')
-.get(getSingleUser)
+.get(getSingleUser) 
 .patch(updateUser)
 .delete(deleteUser);
 

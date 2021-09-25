@@ -6,7 +6,7 @@ const AppError = require('./utils/AppError');
 const errorHandler = require('./ErrorHandler/errorHandler')
 
 const app = express();
-
+ 
 app.use(express.json()) 
 
 app.use(express.static(`${__dirname}/public`))
@@ -16,7 +16,7 @@ app.use(express.static(`${__dirname}/public`))
 //     // console.log(req.headers)
 //     next();
 // })
-
+ 
 
 app.use('/api/tours', tourRouter)
 
