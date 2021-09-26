@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
+const User = require('./user')
+
 const tourSchema = new mongoose.Schema({
     name:{
         type:String, 
@@ -58,7 +60,29 @@ const tourSchema = new mongoose.Schema({
         required:[true, 'tour must have imageCover'],
         trim:true
     },
+    startLocation:{
+        type:{
+            type:String, 
+            default:'Point',
+            enum:['Point']
+        },
+        coordinates:[Number],
+        address: String, 
+        description:String
+    },
+    location:{
+        type:{
+            type:String, 
+            default:'Point',
+            enum:['Point']
+        },
+        coordinates:[Number],
+        address: String, 
+        description:String,
+        day:Number
+    },
     images: [String],
+    guides: Array,
     createdAt:{
         type:Date,
         default:Date.now(),
@@ -80,9 +104,15 @@ tourSchema.pre('save', function (next){
      next();
 })
 
-tourSchema.post('save', function (doc, next){
-     next();
+tourSchema.pre('save', async function(next){
+    const guidePromises = this.guides.map(async id=>await User.findById(id))
+    this.guides = await Promise.all(guidePromises)
+     return next();
 })
+
+// tourSchema.post('save', function (doc, next){
+//      next();
+// })
 
 // query middleware
 tourSchema.pre(/^find/, function(next){
