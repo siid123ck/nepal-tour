@@ -101,6 +101,12 @@ tourSchema.virtual('nepaliPrice').get(function (){
     return this.price * 100;
 })
 
+tourSchema.virtual('reviews',{
+    ref:'Review',
+    foreignField:'tour',
+    localField:'_id'
+})
+
 //document middleware
 tourSchema.pre('save', function (next){
     this.slug = slugify(this.name, {lower:true})
