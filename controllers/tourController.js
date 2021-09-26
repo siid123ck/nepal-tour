@@ -4,10 +4,10 @@ const APIFeature = require('../utils/apiFeatures');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
-const hanldeCastErr = err=>{
-    const message = `Invalid ${err.path}: ${err.value}`; 
-    return new AppError(message, 400)
-}
+// const hanldeCastErr = err=>{
+//     const message = `Invalid ${err.path}: ${err.value}`; 
+//     return new AppError(message, 400)
+// }
 
 
 const getAllTours = catchAsync(async (req, res, next)=>{
@@ -26,7 +26,9 @@ const getAllTours = catchAsync(async (req, res, next)=>{
  const postTour = catchAsync(async (req, res, next)=>{
     // const new_tour = new Tour(req.body);
     // new_tour.save();
-    const new_tour = await Tour.create(req.body);
+    const tour= await Tour.create(req.body);
+    const new_tour = await Tour.findOne(tour._id)
+
     res.status(201).json({
         status:'sucess',
         data:{new_tour}
