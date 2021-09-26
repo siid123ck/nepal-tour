@@ -10,6 +10,7 @@ const tourRouter = require('./routes/tour');
 const userRouter = require('./routes/user');
 const AppError = require('./utils/AppError');
 const errorHandler = require('./ErrorHandler/errorHandler')
+const reviewRoute = require('./routes/review')
 
 const app = express();
 
@@ -45,8 +46,8 @@ const limiter = rateLimit({
 app.use('/api', limiter)
  
 app.use('/api/tours', tourRouter)
-
 app.use('/api/users', userRouter)
+app.use('/api/reviews', reviewRoute)
 
 app.post('/api/auth/signup', authController.signup)
 app.post('/api/auth/login', authController.login)
