@@ -5,11 +5,11 @@ const APIFeature = require('../utils/apiFeatures');
 module.exports.getAll = Model=>catchAsync(async (req, res, next)=>{
     let filter = {}; 
     if(req.params.tourId) filter = {tour:req.params.tourId}
-    
+
     const features = new APIFeature(Model.find(filter), req.query).filter().sort().limit()
     .limitFields().paginate()
     const documents = await features.query; 
-        res.status(200).json({
+    res.status(200).json({
             status:'sucess',
             result:documents.length,
             data:documents

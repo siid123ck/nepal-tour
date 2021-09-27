@@ -107,6 +107,10 @@ tourSchema.virtual('reviews',{
     localField:'_id'
 })
 
+// indexing document 
+tourSchema.index({price:1, ratingQty:-1})
+tourSchema.index({slug:1})
+
 //document middleware
 tourSchema.pre('save', function (next){
     this.slug = slugify(this.name, {lower:true})
@@ -135,12 +139,11 @@ tourSchema.pre(/^find/, function(next){
 
 // query middleware
 tourSchema.pre(/^find/, function(next){
-    this.find({secretTour:false})
+    this.find({secretTour:{$ne:true}})
+    this.price = Number(this.price);
     this.start=Date.now()
     next();
 })
-
-
 
 
 // tourSchema.pre('findOne', function(next){
