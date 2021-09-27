@@ -1,6 +1,7 @@
 const User = require("../model/user");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require('../utils/AppError');
+const factoryHandler = require('./factoryHandler')
 
 const filterObj = (obj, ...fields)=>{
   const newObj = {}; 
@@ -10,29 +11,7 @@ const filterObj = (obj, ...fields)=>{
   return newObj;
 }
 
-const getAllUsers = catchAsync(async(req, res, next)=>{
-  const users = await User.find()
-        res.status(200).json({
-            status:'sucess',
-            result:users.length,
-            users
-        })
- })
-
-
-const getSingleUser =  (req, res)=>{
-  res.send('get single user')
-};
-
-const deleteUser =  (req, res)=>{
-res.send('deleted ')
-}
-
-const updateUser = (req, res)=>{
-    res.send('updated text ')
-}
-
-const updateMe =catchAsync(async (req, res, next)=>{
+const updateMe = catchAsync(async (req, res, next)=>{
  if(req.body.password || req.body.comfirm_password){
    return next(new AppError('You can not change password in this page', 400))
  }
@@ -57,5 +36,15 @@ const deleteMe = catchAsync(async (req, res, next)=>{
   })
 })
 
+const getMe = (req, res, next)=>{
+  req.params.id = req.user.id;
+  next()
+}
 
- module.exports= {getAllUsers, getSingleUser, updateUser, deleteUser, updateMe, deleteMe};
+
+const getAllUsers =factoryHandler.getAll(User);
+const getSingleUser =  factoryHandler.getOne(User);
+const updateUser = factoryHandler.updateOne(User);
+const deleteUser = factoryHandler.deleteOne(User);
+
+ module.exports= {getAllUsers, getSingleUser, updateUser, deleteUser, updateMe, deleteMe, getMe};

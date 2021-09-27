@@ -9,16 +9,18 @@ const { getAllTours, postTour, getSingleTour, updateTour, deleteTour} = require(
 //get top tours
 // router.route('/api/tours/top-tours').get(aliasTopTours, getAllTours)
 
+router.use(authController.protect)
+
 router.use('/:tourId/reviews', reviewRoute)
 
 router.route('/')
-.get(authController.protect, getAllTours)
-.post(postTour);
+.get(getAllTours)
+.post(authController.restrictTo('admin', 'guide-lead'), postTour);
 
 router.route('/:id')
 .get(getSingleTour)
-.patch(updateTour)
-.delete(authController.protect, authController.restrictTo('admin', 'guide-lead'), deleteTour);
+.patch(authController.restrictTo('admin', 'guide-lead'),updateTour)
+.delete(authController.restrictTo('admin', 'guide-lead'), deleteTour);
 
 
 
