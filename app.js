@@ -3,21 +3,30 @@ const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean')
-const hpp = require('hpp')
+// const hpp = require('hpp')
+const path = require('path');
 
 const authController = require('./controllers/authController')
 const tourRouter = require('./routes/tour');
 const userRouter = require('./routes/user');
+const viewRouter = require('./routes/viewRouter');
 const AppError = require('./utils/AppError');
 const errorHandler = require('./ErrorHandler/errorHandler')
-const reviewRoute = require('./routes/review')
+const reviewRoute = require('./routes/review');
 
 const app = express();
 
+//set template engines 
+app.set('view engine', 'pug') 
+app.set('views', path.join(__dirname, 'views'))
+
+//set to serve static files
+app.use(express.static(path.join(__dirname, 'public')))
 //helmet to set security http headers
 app.use(helmet())
 
-app.use(express.json()) 
+app.use(express.json())  
+
 
 app.use(mongoSanitize()); 
 
@@ -47,6 +56,7 @@ app.use('/api', limiter)
  
 app.use('/api/tours', tourRouter)
 app.use('/api/users', userRouter)
+app.use('/', viewRouter)
 app.use('/api/reviews', reviewRoute)
 
 app.post('/api/auth/signup', authController.signup)

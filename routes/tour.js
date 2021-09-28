@@ -8,7 +8,7 @@ const { getAllTours, postTour, getSingleTour, updateTour, deleteTour} = require(
 
 //get top tours
 // router.route('/api/tours/top-tours').get(aliasTopTours, getAllTours)
-
+ 
 router.use(authController.protect)
 
 router.use('/:tourId/reviews', reviewRoute)
