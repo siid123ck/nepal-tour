@@ -1,6 +1,8 @@
 const app = require('express');
+
 const { protect, restrictTo } = require('../controllers/authController');
-const { getAllUsers, getSingleUser, updateUser, deleteUser, updateMe, deleteMe, getMe } = require('../controllers/userController');
+const { getAllUsers, getSingleUser, updateUser, deleteUser, updateMe, deleteMe, 
+    getMe, uploadPhoto, resizedAfterUpload } = require('../controllers/userController');
 const router = app.Router();
 
 // router.post('/signup', authController.signup)
@@ -12,12 +14,12 @@ router.use(protect);
 
 router.route('/me')
 .get(getMe, getSingleUser)
-.patch(updateMe)
+.patch(uploadPhoto, resizedAfterUpload, updateMe)
 .delete(deleteMe)
 
 router.route('/:id')
 .get(getSingleUser) 
-.patch(restrictTo('admin'), updateUser)
+.patch(restrictTo('user'), updateUser)
 .delete(restrictTo('admin'), deleteUser);
 
 

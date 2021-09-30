@@ -47,7 +47,10 @@ const userSchema = mongoose.Schema({
         enum:['user', 'guide', 'guide-lead', 'admin'],
         default:'user'
     },
-    photo:String
+    photo:{
+        type:String,
+        default:'default.jpeg'
+    }
 
 }) 
 
