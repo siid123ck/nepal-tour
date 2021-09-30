@@ -6,6 +6,15 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require('../utils/AppError');
 const factoryHandler = require('./factoryHandler')
 
+
+const filterObj = (obj, ...fields)=>{
+  const newObj = {}; 
+  Object.keys(obj).forEach(element => {
+    if(fields.includes(element)) newObj[element] = obj[element];
+  });
+  return newObj;
+}
+
 // const upload = multer({dest:'public/images/users'});
 // const multiStorage = multer.diskStorage({
 //   destination: (req, file, cb)=>cb(null, 'public/images/users'),
@@ -26,13 +35,6 @@ const upload = multer({
 })
 
 
-const filterObj = (obj, ...fields)=>{
-  const newObj = {}; 
-  Object.keys(obj).forEach(element => {
-    if(fields.includes(element)) newObj[element] = obj[element];
-  });
-  return newObj;
-}
 
 const uploadPhoto = upload.single('photo');
 

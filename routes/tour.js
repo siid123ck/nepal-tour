@@ -3,7 +3,8 @@ const router = express.Router();
 const authController = require('../controllers/authController')
 const reviewRoute = require('./review')
 
-const { getAllTours, postTour, getSingleTour, updateTour, deleteTour} = require('../controllers/tourController');
+const { getAllTours, postTour, getSingleTour, updateTour, deleteTour,
+     uploadTourFiles, customizedUploadedFiles} = require('../controllers/tourController');
 
 
 //get top tours
@@ -19,7 +20,7 @@ router.route('/')
 
 router.route('/:id')
 .get(getSingleTour)
-.patch(authController.restrictTo('admin', 'guide-lead'),updateTour)
+.patch(authController.restrictTo('admin', 'guide-lead'), uploadTourFiles, customizedUploadedFiles, updateTour)
 .delete(authController.restrictTo('admin', 'guide-lead'), deleteTour);
 
 
