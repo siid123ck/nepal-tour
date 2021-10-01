@@ -9,9 +9,10 @@ const path = require('path');
 const authController = require('./controllers/authController')
 const tourRouter = require('./routes/tour');
 const userRouter = require('./routes/user');
+const viewRouter = require('./routes/viewRouter')
+const reviewRoute = require('./routes/review');
 const AppError = require('./utils/AppError');
 const errorHandler = require('./ErrorHandler/errorHandler')
-const reviewRoute = require('./routes/review');
 
 const app = express();
 
@@ -52,10 +53,11 @@ const limiter = rateLimit({
     message:'too many reuests in this ip, please try again later'
 })
 app.use('/api', limiter)
- 
+
 app.use('/api/tours', tourRouter)
 app.use('/api/users', userRouter)
 app.use('/api/reviews', reviewRoute)
+app.use('/', viewRouter)
 
 app.post('/api/auth/signup', authController.signup)
 app.post('/api/auth/login', authController.login)
